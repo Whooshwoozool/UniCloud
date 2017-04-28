@@ -35,6 +35,46 @@ app.use(function(err, req, res, next){
     return;
 });
 
+//login func, search by Login name
+app.get('/api/users/:login', function (req, res) {
+    //find a record in DB with @login credentials
+    //json with username and password must be sent
+    res.send('login is correct');
+});
+
+//user's list of files
+app.get('/api/users/:user_id/files', function (req, res) {
+    //json with list of user's files and folders
+    res.send('list of files got successfully');
+});
+
+//add uploaded file to user's directory and DB
+app.post('/api/users/:user_id/files', function (req, res) {
+    res.send('file was successfully uploaded');
+});
+
+//update certain file
+app.put('/api/users/:user_id/files/:file_id', function (req, res) {
+    res.send('file was successfully updated');
+});
+
+//delete certain file
+app.delete('/api/users/:user_id/files/:file_id', function (req, res) {
+    res.send('file was successfully deleted');
+});
+
+//get file
+app.get('/api/users/:user_id/files/:file_id', function (req, res) {
+    //json with list of user's files and folders
+    res.send('file got successfully');
+});
+
+//delete user's certain folder with files
+app.delete('/api/users/:user_id/folders/:folder_name' ,function (req, res) {
+    //search files, which contains @folder_name in their objects and also delete this files
+    res.send('folder was successfully deleted');
+});
+
 
 app.get('/api', function (req, res) {
     res.send('API is running');
