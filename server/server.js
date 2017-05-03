@@ -1,7 +1,28 @@
 var express = require('express');
 var path = require('path');
+var dbpath = require('./libs/db');
 var log = require('./libs/log')(module);
 var app = express();
+MongoClient = require('mongodb').MongoClient;
+
+// MongoClient.connect(db.url, (err, database) => {
+//     if (err) return console.log(err)
+//     require('./app/routes')(app, database);
+// app.listen(port, () => {
+//     console.log('We are live on ' + port);
+// });
+// });
+var db;
+MongoClient.connect(dbpath.url, function (err, database) {
+   if(err){
+       return log.error(err)
+   }
+    db = database;
+});
+
+//var FileModel = require('./libs/mongoose').FileModel;
+//var UserModel = require('./libs/mongoose').UserModel;
+//var FolderModel = require('./libs/mongoose').FolderModel;
 
 
 app.use(express.favicon());
@@ -45,7 +66,29 @@ app.get('/api/users/:login', function (req, res) {
 //user's list of files
 app.get('/api/users/:user_id/files', function (req, res) {
     //json with list of user's files and folders
-    res.send('list of files got successfully');
+    /*db.collection('Files').find(req.user_id, function (err, docs) {
+        docs.each(function (err, doc) {
+           if(doc){
+               console.log(doc);
+               res.send(doc);
+           }else{
+               res.end();
+           }
+        });
+    });*/
+    db.collection('Files').find({'user':'cpeterffyx'}).toArray(function (err, items) {
+        res.send(items);
+    });
+    /*return FileModel.find(function (err, files) {
+        if (!err){
+            return res.send(files);
+        } else{
+            res.statusCode = 500;
+            log.error('Internal error(%d)" %s', res.statusCode, err.message);
+            return res.send({error: 'Server error'});
+        }
+    });*/
+    //res.send('list of files got successfully');
 });
 
 //add uploaded file to user's directory and DB
