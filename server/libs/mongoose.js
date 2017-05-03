@@ -18,6 +18,7 @@ var File = new Schema({
     title: { type: String, required: true },
     user: { type: String, required: true },
     date: { type: Date, default: Date.now },
+   // time: { type: Date.UTC, default: Date.UTC.now()},
     size: {type: Number, required: true},
     extention: { type: String, required: true },
     folder : { type: String, default: 'Main'}
@@ -27,8 +28,9 @@ var User = new Schema({
     login: { type: String, required: true },
     password: { type: String, required: true },
     firstName: { type: String, required: true },
+    email: { type: String, required: true},
     lastName: { type: String, required: true },
-    diskSize: { type: String, required: true }
+    size: { type: String, required: true }
 });
 
 var Folder = new Schema({
