@@ -126,7 +126,21 @@ app.post('/api/users/:user_id/files', function (req, res) {
 
 //update certain file
 app.put('/api/users/:user_id/files/:file_id', function (req, res) {
-    res.send('file was successfully updated');
+    //res.send('file was successfully updated');
+    var ObjectID = require('mongodb').ObjectID;
+    db.collection('Files', function (err, collection) {
+        collection.updateOne({'_id':  new ObjectID(req.params.file_id), 'user': req.params.user_id}, {$set:{'title': req.body.filename}}, function (err, result) {
+            collection.findOne({'_id': new ObjectID(req.params.file_id), 'user': req.params.user_id, 'title': req.body.filename}, function (err, result) {
+                if (err){
+                    res.statusCode = 500;
+                    res.send('Internal error');
+                } else {
+                    res.statusCode = 200;
+                    res.send('File was successfully updated');
+                }
+            });
+        })
+    });
 });
 
 //delete certain file

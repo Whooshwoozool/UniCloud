@@ -5,10 +5,10 @@
         .module('myApp')
         .controller('FilesList', FilesList);
 
-    FilesList.$inject = ['$scope', 'FileManager', 'Notificator'];
+    FilesList.$inject = ['$scope', 'FileManager', 'Notificator', 'modalService', '$rootScope'];
 
-    function FilesList($scope, FileManager, Notificator) {
-        var user_name = 'cpeterffyx';
+    function FilesList($scope, FileManager, Notificator, modalService, $rootScope) {
+        var user_name = 'mharbisherr';
 
         $scope.nm = user_name;
 
@@ -35,7 +35,22 @@
                 }, function (res) {
                     Notificator.error(res);
                 });
-        }
+        };
+        
+        $scope.renameFile = function (obj) {
+            var file_id = obj._id;
+            var modalOptions = {
+                closeButtonText: 'Cancel',
+                actionButtonText: 'Rename',
+                headerText: obj.title + '.' +obj.extention,
+                bodyText: 'Are you sure you want to rename this file?'
+            };
+            modalService.showModal({}, modalOptions, obj).then(function (result) {
+                var index = findIndex($scope.files, '_id', file_id);
+                $scope.files[index].title = $rootScope.newFName;
+                console.log($scope.files[index].title);
+            });
+        };
 
         function findIndex(array, key, value) {
             for (var i = 0; i < array.length; i++) {

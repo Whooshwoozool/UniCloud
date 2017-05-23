@@ -25,7 +25,7 @@
         
         function UpdateFile(user_name, file_id, data) {
             var url = 'http://localhost:1337/api/users/' + user_name + '/files/' + file_id;
-            return $http.put(url)
+            return $http.put(url, data)
                 .then(handleSuccess, handleError('Error updating file'));
         }
 
