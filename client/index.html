@@ -19,6 +19,8 @@
     <link href="./bower_components/bootstrap/dist/css/bootstrap-theme.css">
     <link href="./bower_components/bootstrap/dist/css/bootstrap-theme.css.map">
     <link href="./bower_components/angular-toastr/dist/angular-toastr.min.css">
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+    <!--<link rel="stylesheet" href="css/font-awesome.min.css">-->
     <link rel="stylesheet" href="css/unminimized.css">
 </head>
 <body ng-controller="FilesList">
@@ -148,8 +150,8 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr ng-repeat="obj in files" ng-hide="false">
-                                    <td>{{obj.title}}</td>
+                                <tr ng-repeat="obj in files" ng-hide="false" style="padding-top: 10px;">
+                                    <td><i ng-class="obj.icon" aria-hiddcen="true"></i>{{obj.title}}</td>
                                     <td>{{obj.size}} mb</td>
                                     <td><span>{{obj.date | date: 'short'}}</span></td>
                                     <td><span>{{obj.time}}</span></td>
