@@ -35,10 +35,16 @@
                 .then(handleSuccess, handleError('Error deleting file'));
         }
 
-        function AddFile(user_name, data) {
+        function AddFile(user_name, file, foldersname) {
             var url = 'http://localhost:1337/api/users/' + user_name + '/files';
-            return $http.post(url)
-                .then(handleSuccess, handleError('Error deleting file'));
+            return $http.post(url, file, {
+                headers: {
+                    'Content-Type': undefined,
+                    "X-Testing" : foldersname
+                },
+                transformRequest: angular.identity
+            })
+                .then(handleSuccess, handleError('Error while add file'));
         }
 
         function handleSuccess(res) {

@@ -13,6 +13,7 @@
     <script src="./bower_components/angular-toastr/dist/angular-toastr.min.js"></script>
     <script src="./bower_components/angular-toastr/dist/angular-toastr.tpls.min.js"></script>
     <script src="./bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
+    <script src="bower_components/ng-file-upload/ng-file-upload.min.js"></script>
     <script src="./js/angular-ui-bootstrap.js"></script>
 
     <link href="./bower_components/bootstrap/dist/css/bootstrap.css">
@@ -78,7 +79,15 @@
             <a href="#" ng-click="logout()">Logout</a>
         </li>
     </ul>
+        <footer class="sidebar-footer">
+            <!--<p class="small text-gray-lighter opacity-60 ml-xs mr-xs mb-xs">58% ready</p>
+            <div class="progress progress-xs mb-sm">
+                <div class="progress-bar progress-bar-success" style="width: 58%"></div>
+            </div>-->
+            <button style="width: 180px;" type="button" class="btn btn-default" ng-click="uploadFile()">Upload file</button>
+        </footer>
         </nav>
+
 
 
 
@@ -150,16 +159,28 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr ng-repeat="obj in files" ng-hide="false" style="padding-top: 10px;">
-                                    <td><i ng-class="obj.icon" aria-hiddcen="true"></i>{{obj.title}}</td>
-                                    <td>{{obj.size}} mb</td>
-                                    <td><span>{{obj.date | date: 'short'}}</span></td>
-                                    <td><span>{{obj.time}}</span></td>
-                                    <td class="text-right">
-                                        <button type="button" class="btn btn-default" ng-click="renameFile(obj)">Edit</button>
-                                        <button type="button" class="btn btn-danger" ng-click="deleteFile(obj)">Delete</button>
-                                    </td>
-                                </tr>
+                                    <!--Folders-->
+                                    <!--<tr ng-repeat="obj in folders">
+                                        <td><i ng-class="obj.icon" aria-hiddcen="true"></i>{{obj.title}}</td>
+                                        <td>{{obj.size}} mb</td>
+                                        <td><span>{{obj.date | date: 'short'}}</span></td>
+                                        <td><span>{{obj.time}}</span></td>
+                                        <td class="text-right">
+                                            <button type="button" class="btn btn-default" ng-click="renameFile(obj)">Edit</button>
+                                            <button type="button" class="btn btn-danger" ng-click="deleteFile(obj)">Delete</button>
+                                        </td>
+                                    </tr>-->
+                                    <!--Files-->
+                                    <tr ng-repeat="obj in files" ng-hide="false" style="padding-top: 10px;">
+                                        <td><i ng-class="obj.icon" aria-hiddcen="true"></i>{{obj.title}}</td>
+                                        <td>{{obj.size}} mb</td>
+                                        <td><span>{{obj.date | date: 'short'}}</span></td>
+                                        <td><span>{{obj.time}}</span></td>
+                                        <td class="text-right">
+                                            <button type="button" class="btn btn-default" ng-click="renameFile(obj)">Edit</button>
+                                            <button type="button" class="btn btn-danger" ng-click="deleteFile(obj)">Delete</button>
+                                        </td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </widget>

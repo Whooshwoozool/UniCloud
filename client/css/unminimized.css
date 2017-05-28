@@ -465,7 +465,7 @@ th {
     font-family: 'Glyphicons Halflings';
     src: url("../fonts/glyphicons-halflings-regular.eot");
     src: url("../fonts/glyphicons-halflings-regular.eot?#iefix") format("embedded-opentype"),
-        url("../fonts/glyphicons-halflings-regular.woff2") format("woff2"),
+        /*url("../fonts/glyphicons-halflings-regular.woff2") format("woff2"),*/
         url("../fonts/glyphicons-halflings-regular.woff") format("woff"),
         url("../fonts/glyphicons-halflings-regular.ttf") format("truetype"),
         url("../fonts/glyphicons-halflings-regular.svg#glyphicons_halflingsregular") format("svg")
@@ -8124,7 +8124,7 @@ button.close {
     }
 }
 
-@font-face {
+/*@font-face {
     font-family: 'Open Sans';
     src: url("../../bower_components/open-sans/fonts/light/opensans-light-webfont.eot");
     src: url("../../bower_components/open-sans/fonts/light/opensans-light-webfont.eot?#iefix") format("embedded-opentype"), url("../../bower_components/open-sans/fonts/light/opensans-light-webfont.woff") format("woff"), url("../../bower_components/open-sans/fonts/light/opensans-light-webfont.ttf") format("truetype"), url("../../bower_components/open-sans/fonts/light/opensans-light-webfont.svg#OpenSansLight") format("svg");
@@ -8175,7 +8175,7 @@ button.close {
 @font-face {
     font-family: 'Open Sans';
     src: url("../../bower_components/open-sans/fonts/bold/opensans-bold-webfont.eot");
-    src: url("../../bower_components/open-sans/fonts/bold/opensans-bold-webfont.eot?#iefix") format("embedded-opentype"), url("../../bower_components/open-sans/fonts/bold/opensans-bold-webfont.woff") format("woff"), url("../../bower_components/open-sans/fonts/bold/opensans-bold-webfont.ttf") format("truetype"), url("../../bower_components/open-sans/fonts/bold/opensans-bold-webfont.svg#OpenSansBold") format("svg");
+    src: url("../../bower_components/open-sans/fonts/bold/opensans-bold-webfont.eot?#iefix") format("embedded-opentype"), !*url("../../bower_components/open-sans/fonts/bold/opensans-bold-webfont.woff") format("woff"),*! url("../../bower_components/open-sans/fonts/bold/opensans-bold-webfont.ttf") format("truetype"), url("../../bower_components/open-sans/fonts/bold/opensans-bold-webfont.svg#OpenSansBold") format("svg");
     font-weight: 700;
     font-style: normal
 }
@@ -8183,7 +8183,7 @@ button.close {
 @font-face {
     font-family: 'Open Sans';
     src: url("../../bower_components/open-sans/fonts/bold-italic/opensans-bold-italic-webfont.eot");
-    src: url("../../bower_components/open-sans/fonts/bold-italic/opensans-bold-italic-webfont.eot?#iefix") format("embedded-opentype"), url("../../bower_components/open-sans/fonts/bold-italic/opensans-bold-italic-webfont.woff") format("woff"), url("../../bower_components/open-sans/fonts/bold-italic/opensans-bold-italic-webfont.ttf") format("truetype"), url("../../bower_components/open-sans/fonts/bold-italic/opensans-bold-italic-webfont.svg#OpenSansItalic") format("svg");
+    src: url("../../bower_components/open-sans/fonts/bold-italic/opensans-bold-italic-webfont.eot?#iefix") format("embedded-opentype"), !*url("../../bower_components/open-sans/fonts/bold-italic/opensans-bold-italic-webfont.woff") format("woff"),*! url("../../bower_components/open-sans/fonts/bold-italic/opensans-bold-italic-webfont.ttf") format("truetype"), url("../../bower_components/open-sans/fonts/bold-italic/opensans-bold-italic-webfont.svg#OpenSansItalic") format("svg");
     font-weight: 700;
     font-style: italic
 }
@@ -8205,7 +8205,7 @@ button.close {
         url("../fonts/extrabold-italic/opensans-extrabold-italic-webfont.svg#OpenSansExtraboldItalic") format("svg");
     font-weight: 800;
     font-style: italic
-}
+}*/
 
 @font-face {
     font-family: 'FontAwesome';
