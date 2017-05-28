@@ -3,6 +3,8 @@ var path = require('path');
 var cors = require('cors');
 var dbpath = require('./libs/db');
 var log = require('./libs/log')(module);
+var multer = require('multer');
+var fs = require('fs');
 var app = express();
 MongoClient = require('mongodb').MongoClient;
 
@@ -26,6 +28,22 @@ MongoClient.connect(dbpath.url, function (err, database) {
 //var UserModel = require('./libs/mongoose').UserModel;
 //var FolderModel = require('./libs/mongoose').FolderModel;
 
+
+app.use(multer
+    (
+        {
+            onFileUploadStart : function(file){
+                console.log('File recieved:');
+                console.log(file);
+            },
+            onFileUploadData:function (file,data){
+                console.log('Data recieved');
+            },
+            onParseEnd: function(req,next){
+                next();}
+        }
+    )
+);
 
 app.use(cors());
 
@@ -121,6 +139,30 @@ app.get('/api/users/:user_id/files', function (req, res) {
 
 //add uploaded file to user's directory and DB
 app.post('/api/users/:user_id/files', function (req, res) {
+   // console.log(req.files);
+    var path = setPath(req.params.user_id, req.headers['x-testing']) + req.files.file.originalFilename;
+    fs.readFile(req.files.file.path, function(err, data){
+        fs.writeFile(path, data, function(err){
+            console.log(path);
+            if (err) throw err;
+            console.log('ok');
+        });
+    });
+    /*var storage = multer.diskStorage({
+        destination: function (req, res, callback){
+            callback(null, path);
+        },
+        filename: function (req, res, callback){
+            callback(null, file.originalname);
+        }
+    });
+    var upload = multer({storage: storage}).single('FUCKINGFILE');
+    upload(req.files.file, res, function(err){
+        if(err){
+            console.log(err);
+        }
+        console.log('File is uploaded');
+    });*/
     res.send('file was successfully uploaded');
 });
 
@@ -194,5 +236,16 @@ app.put('/api/users/:user_id/folders/:folder_name' ,function (req, res) {
 app.get('/api', function (req, res) {
     res.send('API is running');
 });
+
+//--------------------------- Other methods ---------------------------------
+
+function setPath(user_name, folder_name){
+    if (folder_name == 'Main') {
+        var path = './userdata/' + user_name + '/'; 
+    }else{
+        var path = './userdata/' + user_name + '/' + folder_name + '/';
+    }
+    return path;
+}
 
 //noinspection JSDeprecatedSymbols
