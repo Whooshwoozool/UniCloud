@@ -139,31 +139,39 @@ app.get('/api/users/:user_id/files', function (req, res) {
 
 //add uploaded file to user's directory and DB
 app.post('/api/users/:user_id/files', function (req, res) {
-   // console.log(req.files);
     var path = setPath(req.params.user_id, req.headers['x-testing']) + req.files.file.originalFilename;
     fs.readFile(req.files.file.path, function(err, data){
         fs.writeFile(path, data, function(err){
-            console.log(path);
-            if (err) throw err;
-            console.log('ok');
+            if (err) {
+                throw err;
+            } else{
+                //res.send('file was successfully uploaded');
+                db.collection('Files', function (err, collection){
+                    //collection
+                    file = new File(
+                        req.files.file.originalFilename,
+                        getDate(),
+                        getTime(),
+                        getSize(req.files.file),
+                        getExtention(req.files.file),
+                        req.headers['x-testing'],
+                        getIcon(req.files.file)
+                    );
+                    collection.insert(file, function(err, result){
+                        collection.findOne({'user': req.params.user_id, 'title': file.title}, function (err, result) {
+                            if (err){
+                                res.statusCode = 500;
+                                res.send('Internal error');
+                            } else {
+                                res.statusCode = 200;
+                                res.send({message: 'File was successfully updated', fileinfo: file});
+                            }
+                        });
+                    });
+                });
+            }
         });
     });
-    /*var storage = multer.diskStorage({
-        destination: function (req, res, callback){
-            callback(null, path);
-        },
-        filename: function (req, res, callback){
-            callback(null, file.originalname);
-        }
-    });
-    var upload = multer({storage: storage}).single('FUCKINGFILE');
-    upload(req.files.file, res, function(err){
-        if(err){
-            console.log(err);
-        }
-        console.log('File is uploaded');
-    });*/
-    res.send('file was successfully uploaded');
 });
 
 //update certain file
@@ -239,6 +247,16 @@ app.get('/api', function (req, res) {
 
 //--------------------------- Other methods ---------------------------------
 
+var File = function(title, date, time, size, extention, folder, icon) {
+    this.title = title;
+    this.date = date;
+    this.time = time;
+    this.size = size;
+    this.extention = extention;
+    this.folder = folder;
+    this.icon = icon;
+};
+
 function setPath(user_name, folder_name){
     if (folder_name == 'Main') {
         var path = './userdata/' + user_name + '/'; 
@@ -248,4 +266,49 @@ function setPath(user_name, folder_name){
     return path;
 }
 
+function getDate(){
+    var dateNow = new Date();
+    var year = dateNow.getFullYear();
+    var month = dateNow.getMonth() + 1;
+    var datenum = dateNow.getDate();
+    var date = datenum + '.' + month + '.' + year;
+    return date;
+}
+
+function getTime(){
+    var timeNow = new Date();
+    var hour = timeNow.getHours();
+    var minutes = timeNow.getMinutes();
+    var time = hour + ':' + minutes;
+    return time;
+}
+
+function getExtention(file){
+    var pos = file.originalFilename.indexOf('.') + 1;
+    var ext = file.originalFilename.substring(pos);
+    return ext;
+}
+
+//mock
+function getIcon(file){
+    return 'fa fa-file fa-2x';
+}
+
+function getSize(file){
+    var size = file.size / 1000000;
+    var size = size.toString();
+    var pos = size.indexOf('.');
+    size = size.substr(pos, 1);
+    return size;
+}
+
 //noinspection JSDeprecatedSymbols
+
+/*"title": "nulla facilisi.xls",
+    "user": "asharerg",
+    "date": "24.4.2017",
+    "time": "6:54",
+    "size": 5.1,
+    "extention": "xls",
+    "folder": "Main",
+    "icon": "fa fa-file-excel-o fa-2x"*/
