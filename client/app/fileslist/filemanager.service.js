@@ -44,11 +44,15 @@
                 },
                 transformRequest: angular.identity
             })
-                .then(handleSuccess, handleError('Error while add file'));
+                .then(handleSuccess2, handleError('Error while add file'));
         }
 
         function handleSuccess(res) {
             return res.data;
+        }
+
+        function handleSuccess2(res) {
+            return res.data.message;
         }
 
         function handleError(error) {
