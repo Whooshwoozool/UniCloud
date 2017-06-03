@@ -71,11 +71,12 @@
                         var fname = 'Main';
                         var fd = new FormData();
                         fd.append('file', $scope.uploadfilename);
-                        console.log($scope.uploadfilename);
+
                         FileManager.AddFile($rootScope.user, fd, fname)
                             .then(function (res) {
                                 console.log(res);
-                                console.log(fd.get('file'));
+                                //console.log(res);
+                                //console.log(fd.get('file'));
                             }, function (res) {
                                 console.log('err');
                             });

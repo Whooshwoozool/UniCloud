@@ -10,13 +10,17 @@
     function FileManager($http) {
         var service = {};
 
+        //for files
         service.GetAllFiles = GetAllFiles;
         service.UpdateFile = UpdateFile;
         service.DeleteFile = DeleteFile;
         service.AddFile = AddFile;
 
+        //for folders
+
         return service;
         
+        //for files
         function GetAllFiles(user_name) {
             var url = 'http://localhost:1337/api/users/' + user_name + '/files';
             return $http.get(url)
@@ -47,12 +51,45 @@
                 .then(handleSuccess2, handleError('Error while add file'));
         }
 
+        //for folders
+        function GetAllFolders(user_name) {
+            var url = 'http://localhost:1337/api/users/' + user_name + '/folders';
+            return $http.get(url)
+                .then(handleSuccess, handleError('Error getting all folders'));
+        }
+        
+        function UpdateFolder(user_name, folder_id, data) {
+            var url = 'http://localhost:1337/api/users/' + user_name + '/files/' + file_id;
+            return $http.put(url, data)
+                .then(handleSuccess, handleError('Error updating file'));
+        }
+
+        function DeleteFolder(user_name, folder_id) {
+            var url = 'http://localhost:1337/api/users/' + user_name + '/files/' + file_id;
+            return $http.delete(url)
+                .then(handleSuccess, handleError('Error deleting file'));
+        }
+
+        function AddFolder(user_name, foldersname) {
+            var url = 'http://localhost:1337/api/users/' + user_name + '/files';
+            return $http.post(url, file, {
+                headers: {
+                    'Content-Type': undefined,
+                    "X-Testing" : foldersname
+                },
+                transformRequest: angular.identity
+            })
+                .then(handleSuccess2, handleError('Error while add file'));
+        }
+
+        //other functions
+
         function handleSuccess(res) {
             return res.data;
         }
 
         function handleSuccess2(res) {
-            return res.data.message;
+            return res.data;
         }
 
         function handleError(error) {

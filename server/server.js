@@ -224,6 +224,22 @@ app.get('/api/users/:user_id/files/:file_id', function (req, res) {
 
 
 //------------------------ Folders section ------------------------
+
+//get user's folders
+app.get('/api/users/:user_name/folders/' ,function (req, res) {
+    db.collection('Folders').find({'user': req.params.user_name}).toArray(function (err, items) {
+        if (err){
+            res.statusCode = 500;
+            log.error('Internal error(%d)" %s', res.statusCode, err.message);
+            return res.send({error: 'Server error'});
+        } else{
+            res.statusCode = 200;
+            res.send(items);
+        }
+    });
+    //res.send('folder was successfully deleted');
+});
+
 //delete user's certain folder with files
 app.delete('/api/users/:user_id/folders/:folder_name' ,function (req, res) {
     //search files, which contains @folder_name in their objects and also delete this files
@@ -298,7 +314,7 @@ function getSize(file){
     var size = file.size / 1000000;
     var size = size.toString();
     var pos = size.indexOf('.');
-    size = size.substr(pos, 1);
+    size = size.substr(pos, 2);
     return size;
 }
 
