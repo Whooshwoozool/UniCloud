@@ -54,7 +54,9 @@
                 <b class="caret"></b>
             </a>
             <ul id="sidebar-dashboard" class="collapse in">
-                <li><a ui-sref="app.posts" ui-sref-active="active">Main</a></li>
+                <!-- <li><a ui-sref="app.posts" ui-sref-active="active">Main</a></li> -->
+                <li><a>Main</a></li>
+                <li ng-repeat="obj in folders" ng-if="obj.folder != 'Main'"><a>{{obj.folder}}</a></li>
                 <!--<li><a ui-sref="app.posts" ui-sref-active="active">Show all</a></li>
                 <li>
                     <a ui-sref="app.editPost" ui-sref-active="active">
@@ -146,7 +148,7 @@
                     <div class="col-md-12">
                         <widget>
                             <header>
-                                <button type="button" class="btn btn-sm btn-gray mt-n-xs pull-right" ui-sref="app.editPost({id: null})">Create folder</button>
+                                <button type="button" class="btn btn-sm btn-gray mt-n-xs pull-right" ng-click="createFolder()">Create folder</button>
                                 <h4 class="widget-title">Files</h4>
                             </header>
                             <table class="table table-striped">
@@ -160,24 +162,25 @@
                                 </thead>
                                 <tbody>
                                     <!--Folders-->
-                                    <!--<tr ng-repeat="obj in folders">
-                                        <td><i ng-class="obj.icon" aria-hiddcen="true"></i>{{obj.title}}</td>
-                                        <td>{{obj.size}} mb</td>
-                                        <td><span>{{obj.date | date: 'short'}}</span></td>
-                                        <td><span>{{obj.time}}</span></td>
+                                    <tr ng-repeat="obj in folders" ng-if="obj.folder != 'Main'">
+                                        <td><i class="fa fa-folder-o fa-2x" aria-hiddcen="true"></i>{{obj.folder}}</td>
+                                        <td></td>
+                                        <td><span></span></td>
+                                        <td><span></span></td>
                                         <td class="text-right">
-                                            <button type="button" class="btn btn-default" ng-click="renameFile(obj)">Edit</button>
-                                            <button type="button" class="btn btn-danger" ng-click="deleteFile(obj)">Delete</button>
+                                            <button type="button" class="btn btn-default" ng-click="renameFolder(obj)">Edit</button>
+                                            <button type="button" class="btn btn-danger" ng-click="deleteFolder(obj)">Delete</button>
                                         </td>
-                                    </tr>-->
+                                    </tr>
                                     <!--Files-->
-                                    <tr ng-repeat="obj in files" ng-hide="false" style="padding-top: 10px;">
+                                    <tr ng-repeat="obj in files" ng-if="obj.folder == 'Main'" ng-hide="false" style="padding-top: 10px;">
                                         <td><i ng-class="obj.icon" aria-hiddcen="true"></i>{{obj.title}}</td>
                                         <td>{{obj.size}} mb</td>
                                         <td><span>{{obj.date | date: 'short'}}</span></td>
                                         <td><span>{{obj.time}}</span></td>
                                         <td class="text-right">
                                             <button type="button" class="btn btn-default" ng-click="renameFile(obj)">Edit</button>
+                                            <button type="button" class="btn btn-default" ng-click="replaceFile(obj)">Replace</button>
                                             <button type="button" class="btn btn-danger" ng-click="deleteFile(obj)">Delete</button>
                                         </td>
                                     </tr>
