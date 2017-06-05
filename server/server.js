@@ -151,6 +151,7 @@ app.post('/api/users/:user_id/files', function (req, res) {
                     file = new File(
                         req.files.file.originalFilename,
                         getDate(),
+                        req.params.user_id,
                         getTime(),
                         getSize(req.files.file),
                         getExtention(req.files.file),
@@ -164,7 +165,7 @@ app.post('/api/users/:user_id/files', function (req, res) {
                                 res.send('Internal error');
                             } else {
                                 res.statusCode = 200;
-                                res.send({message: 'File was successfully updated', fileinfo: file});
+                                res.send({message: 'File was successfully updated', fileinfo: result});
                             }
                         });
                     });
@@ -179,7 +180,7 @@ app.put('/api/users/:user_id/files/:file_id', function (req, res) {
     //res.send('file was successfully updated');
     var ObjectID = require('mongodb').ObjectID;
     db.collection('Files', function (err, collection) {
-        collection.updateOne({'_id':  new ObjectID(req.params.file_id), 'user': req.params.user_id}, {$set:{'title': req.body.filename}}, function (err, result) {
+        collection.updateOne({'_id':  new ObjectID(req.params.file_id), 'user': req.params.user_id}, {$set:{'title': req.body.filename, 'folder':req.body.foldername}}, function (err, result) {
             collection.findOne({'_id': new ObjectID(req.params.file_id), 'user': req.params.user_id, 'title': req.body.filename}, function (err, result) {
                 if (err){
                     res.statusCode = 500;
@@ -226,7 +227,7 @@ app.get('/api/users/:user_id/files/:file_id', function (req, res) {
 //------------------------ Folders section ------------------------
 
 //get user's folders
-app.get('/api/users/:user_name/folders/' ,function (req, res) {
+app.get('/api/users/:user_name/folders' ,function (req, res) {
     db.collection('Folders').find({'user': req.params.user_name}).toArray(function (err, items) {
         if (err){
             res.statusCode = 500;
@@ -241,19 +242,66 @@ app.get('/api/users/:user_name/folders/' ,function (req, res) {
 });
 
 //delete user's certain folder with files
-app.delete('/api/users/:user_id/folders/:folder_name' ,function (req, res) {
+app.delete('/api/users/:user_id/folders/:folder_id' ,function (req, res) {
+    var ObjectID = require('mongodb').ObjectID;
+    db.collection('Folders', function (err, collection) {
+        collection.deleteOne({'_id': new ObjectID(req.params.folder_id), 'user': req.params.user_id}, function (err, result) {
+            collection.findOne({'_id': new ObjectID(req.params.folder_id), 'user': req.params.user_id}, function (err, result) {
+                if (err){
+                    res.statusCode = 500;
+                    res.send('Internal error');
+                } else {
+                    res.statusCode = 200;
+                    res.send('Folder was successfully removed');
+                }
+            });
+        });
+    });
     //search files, which contains @folder_name in their objects and also delete this files
-    res.send('folder was successfully deleted');
+    //res.send('folder was successfully deleted');
 });
 
-app.post('/api/users/:user_id/folders/:folder_name' ,function (req, res) {
+app.post('/api/users/:user_id/folders' ,function (req, res) {
     //search files, which contains @folder_name in their objects and also delete this files
-    res.send('folder was successfully created');
+    //res.send('folder was successfully created');
+    db.collection('Folders', function (err, collection){
+        //collection
+        newfolder = new Folder(
+            req.params.user_id,
+            req.body.folder
+        );
+        collection.insert(newfolder, function(err, result){
+            collection.findOne({'user': req.params.user_id, 'folder': req.body.folder}, function (err, result) {
+                if (err){
+                    res.statusCode = 500;
+                    res.send('Internal error');
+                } else {
+                    res.statusCode = 200;
+                    res.send({message: 'Folder was successfully created', folderinfo: result});
+                }
+            });
+        });
+    });
 });
 
-app.put('/api/users/:user_id/folders/:folder_name' ,function (req, res) {
+app.put('/api/users/:user_id/folders/:folder_id' ,function (req, res) {
     //search files, which contains @folder_name in their objects and also delete this files
-    res.send('folder was successfully patched');
+    //res.send('folder was successfully patched');
+    console.log(req.body.foldername);
+    var ObjectID = require('mongodb').ObjectID;
+    db.collection('Folders', function (err, collection) {
+        collection.updateOne({'_id':  new ObjectID(req.params.folder_id), 'user': req.params.user_id}, {$set:{'folder': req.body.foldername}}, function (err, result) {
+            collection.findOne({'_id': new ObjectID(req.params.folder_id), 'user': req.params.user_id, 'folder': req.body.foldername}, function (err, result) {
+                if (err){
+                    res.statusCode = 500;
+                    res.send('Internal error');
+                } else {
+                    res.statusCode = 200;
+                    res.send('Folder was successfully updated');
+                }
+            });
+        })
+    });
 });
 
 
@@ -263,14 +311,22 @@ app.get('/api', function (req, res) {
 
 //--------------------------- Other methods ---------------------------------
 
-var File = function(title, date, time, size, extention, folder, icon) {
+//constructor
+//нужно переписать, чтобы в параметрах было не так много значений а один объект или массив
+var File = function(title, date, user, time, size, extention, folder, icon) {
     this.title = title;
     this.date = date;
+    this.user = user
     this.time = time;
     this.size = size;
     this.extention = extention;
     this.folder = folder;
     this.icon = icon;
+};
+
+var Folder = function(user, folder) {
+    this.user = user;
+    this.folder = folder;
 };
 
 function setPath(user_name, folder_name){
