@@ -68,17 +68,24 @@
 
                     $scope.modalOptions = tempModalOptions;
                     $scope.modalOptions.ok = function (result) {
-                        var fname = 'Main';
+                        var fname = $scope.destinationFodler;
+
+                        if (fname == null) {
+                            fname = 'Main';
+                        }
+                        
                         var fd = new FormData();
                         fd.append('file', $scope.uploadfilename);
 
                         FileManager.AddFile($rootScope.user, fd, fname)
                             .then(function (res) {
-                                console.log(res);
                                 //console.log(res);
+                                $rootScope.$broadcast('newUploadedFile', res);
                                 //console.log(fd.get('file'));
+                                Notificator.success(res.message);
                             }, function (res) {
                                 console.log('err');
+                                Notificator.error(res);
                             });
                         //logic here
 

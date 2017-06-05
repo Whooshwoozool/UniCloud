@@ -3,8 +3,9 @@
 </div>
 <div class="modal-body" style="height: 250px;">
     <p>{{modalOptions.bodyText}}</p>
-    <select class="form-control">
-        <option ng-repeat="obj in foldersL">{{obj.title}}</option>
+    <select class="form-control selectpicker" ng-model="destinationFodler" required="required" title="Select destination folder">
+        <option>Main</option>
+        <option ng-repeat="obj in foldersL" ng-if="obj.folder != 'Main'">{{obj.folder}}</option>
     </select>
     <input readonly type="text" class="form-control" id="newfilename" placeholder="File name" ng-model="uploadfilename.name"><br>
     <button type="file" class="btn btn-default" style="float: left;" ngf-select="uploadFile($file, $invalidFiles)"

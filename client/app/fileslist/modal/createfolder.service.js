@@ -3,16 +3,16 @@
 
     angular
         .module('myApp')
-        .service('modalService', modalService);
+        .service('createFolderService', createFolderService);
 
-    modalService.$inject = ['$uibModal', 'FileManager', 'Notificator'];
-    function modalService($uibModal, FileManager, Notificator) {
+    createFolderService.$inject = ['$uibModal', 'FileManager', 'Notificator'];
+    function createFolderService($uibModal, FileManager, Notificator) {
 
         var modalDefaults = {
             backdrop: true,
             keyboard: true,
             modalFade: true,
-            templateUrl: '../app/fileslist/modal/modal.html'
+            templateUrl: '../app/fileslist/modal/createfolderModal.html'
         };
 
         var modalOptions = {
@@ -22,13 +22,13 @@
             bodyText: 'Perform this action?'
         };
 
-        this.showModal = function (customModalDefaults, customModalOptions, obj) {
+        this.showModal = function (customModalDefaults, customModalOptions) {
             if (!customModalDefaults) customModalDefaults = {};
             customModalDefaults.backdrop = 'static';
-            return this.show(customModalDefaults, customModalOptions, obj);
+            return this.show(customModalDefaults, customModalOptions);
         };
 
-        this.show = function (customModalDefaults, customModalOptions, obj) {
+        this.show = function (customModalDefaults, customModalOptions) {
             //Create temp objects to work with since we're in a singleton service
             var tempModalDefaults = {};
             var tempModalOptions = {};
@@ -44,10 +44,11 @@
 
                     $scope.modalOptions = tempModalOptions;
                     $scope.modalOptions.ok = function (result) {
-                        $rootScope.newFName = $scope.newfilename;
-                        FileManager.UpdateFile(obj.user, obj._id, JSON.stringify({filename: $scope.newfilename, foldername: obj.folder}))
+                        $rootScope.newFName = $scope.newfoldername;
+                        FileManager.AddFolder($rootScope.user, JSON.stringify({folder: $scope.newfoldername}))
                             .then(function (res) {
-                                Notificator.success(res);
+                                $rootScope.$broadcast('newFolder', res);
+                                Notificator.success(res.message);
                             }, function (res) {
                                 Notificator.error(res);
                             });

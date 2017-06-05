@@ -17,6 +17,10 @@
         service.AddFile = AddFile;
 
         //for folders
+        service.GetAllFolders = GetAllFolders;
+        service.UpdateFolder = UpdateFolder;
+        service.DeleteFolder = DeleteFolder;
+        service.AddFolder = AddFolder;
 
         return service;
         
@@ -59,27 +63,21 @@
         }
         
         function UpdateFolder(user_name, folder_id, data) {
-            var url = 'http://localhost:1337/api/users/' + user_name + '/files/' + file_id;
+            var url = 'http://localhost:1337/api/users/' + user_name + '/folders/' + folder_id;
             return $http.put(url, data)
                 .then(handleSuccess, handleError('Error updating file'));
         }
 
         function DeleteFolder(user_name, folder_id) {
-            var url = 'http://localhost:1337/api/users/' + user_name + '/files/' + file_id;
+            var url = 'http://localhost:1337/api/users/' + user_name + '/folders/' + folder_id;
             return $http.delete(url)
                 .then(handleSuccess, handleError('Error deleting file'));
         }
 
-        function AddFolder(user_name, foldersname) {
-            var url = 'http://localhost:1337/api/users/' + user_name + '/files';
-            return $http.post(url, file, {
-                headers: {
-                    'Content-Type': undefined,
-                    "X-Testing" : foldersname
-                },
-                transformRequest: angular.identity
-            })
-                .then(handleSuccess2, handleError('Error while add file'));
+        function AddFolder(user_name, foldername) {
+            var url = 'http://localhost:1337/api/users/' + user_name + '/folders';
+            return $http.post(url, foldername)
+                .then(handleSuccess, handleError('Error while add file'));
         }
 
         //other functions

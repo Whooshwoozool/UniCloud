@@ -6,3 +6,5 @@ require('./widget/widget');
 require('./notificator/notifications');
 require('./fileslist/modal/modal');
 require('./fileslist/modal/uploadfile.service');
+require('./fileslist/modal/editfolder.service');
+require('./fileslist/modal/createfolder.service.js');

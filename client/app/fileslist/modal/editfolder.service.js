@@ -3,16 +3,16 @@
 
     angular
         .module('myApp')
-        .service('modalService', modalService);
+        .service('editFolderService', editFolderService);
 
-    modalService.$inject = ['$uibModal', 'FileManager', 'Notificator'];
-    function modalService($uibModal, FileManager, Notificator) {
+    editFolderService.$inject = ['$uibModal', 'FileManager', 'Notificator'];
+    function editFolderService($uibModal, FileManager, Notificator) {
 
         var modalDefaults = {
             backdrop: true,
             keyboard: true,
             modalFade: true,
-            templateUrl: '../app/fileslist/modal/modal.html'
+            templateUrl: '../app/fileslist/modal/editfolderModal.html'
         };
 
         var modalOptions = {
@@ -44,9 +44,14 @@
 
                     $scope.modalOptions = tempModalOptions;
                     $scope.modalOptions.ok = function (result) {
-                        $rootScope.newFName = $scope.newfilename;
-                        FileManager.UpdateFile(obj.user, obj._id, JSON.stringify({filename: $scope.newfilename, foldername: obj.folder}))
+                        //$rootScope.newFName = $scope.newfoldername;
+                        var info = {
+                            obj: obj,
+                            newfoldername: $scope.newfoldername
+                        };
+                        FileManager.UpdateFolder(obj.user, obj._id, JSON.stringify({foldername: $scope.newfoldername}))
                             .then(function (res) {
+                                $rootScope.$broadcast('newUpdatedFolder', info);
                                 Notificator.success(res);
                             }, function (res) {
                                 Notificator.error(res);
