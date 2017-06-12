@@ -7,6 +7,7 @@
 
     FilesList.$inject = [
         '$scope',
+        '$window',
         'FileManager',
         'Notificator',
         'modalService',
@@ -14,17 +15,18 @@
         'Upload',
         'uploadFileModalService',
         'editFolderService',
-        'createFolderService'
+        'createFolderService',
+        '$location',
+        'replaceFileModalService'
     ];
 
-    function FilesList($scope, FileManager, Notificator, modalService, $rootScope, Upload, uploadFileModalService, editFolderService, createFolderService) {
-        var user_name = 'mharbisherr';
-        $rootScope.user = user_name;
-
-        $scope.nm = user_name;
+    function FilesList($scope, $window, FileManager, Notificator, modalService, $rootScope, Upload, uploadFileModalService, editFolderService, createFolderService, $location, replaceFileModalService) {
+        //var user_name = 'mharbisherr';
+        console.log($rootScope.user);
+        $scope.nm = $rootScope.user;
     
         //get files
-        FileManager.GetAllFiles(user_name)
+        FileManager.GetAllFiles($scope.nm)
             .then(function (res) {
                 $scope.files = res;
                 $scope.loaded = true;
@@ -103,8 +105,36 @@
             });
         };
 
+        $scope.init = function () {
+                console.log("Angularjs call function on page load");
+            };
+
+        // $window.onload = function() {
+        //         console.log("Angularjs call function on page load");
+        //     };
+
+        $scope.replaceFile = function (obj) {
+            var modalOptions = {
+                closeButtonText: 'Cancel',
+                actionButtonText: 'Replace',
+                headerText: 'File replacing',
+                bodyText: 'Are you sure you want to replace this file?'
+            };
+            replaceFileModalService.showModal({}, modalOptions, obj).then(function (result) {
+                //var index = findIndex($scope.files, '_id', file_id);
+                //$scope.files[index].title = $rootScope.newFName;
+                //console.log('it works');
+                $scope.$on('newFileDestination', function (event, args) {
+                    console.log(args);
+                    var obj = args.fileinfo;
+                    var index = findIndex($scope.files, '_id', args.fileinfo._id);
+                    $scope.files[index] = args.fileinfo;
+                });
+            });
+        };
+
         //get folders
-        FileManager.GetAllFolders(user_name)
+        FileManager.GetAllFolders($scope.nm)
             .then(function (res) {
                 $scope.folders = res;
                 $rootScope.foldersList = $scope.folders;
@@ -152,6 +182,12 @@
                 });
         };
 
+        //open folder
+        $scope.openFolder = function (obj) {
+            $rootScope.folderToOpen = obj;
+            $location.path( '/list/' + obj.folder );
+        };
+
         //create folder
         $scope.createFolder = function () {
             //var folder_id = obj._id;
@@ -169,6 +205,23 @@
             });
         };
         
+
+        //logout
+        $scope.logout = function(){
+            localStorage.clear();
+            Notificator.success('Logged out successfully !');
+            $location.path('login');
+        }
+
+        //links to other folders
+        $scope.relocate = function(path){
+            var obj = {};
+            obj.folder = path;
+            $rootScope.folderToOpen = obj;
+            $location.path(path);
+        }
+
+        //other functions
         function findIndex(array, key, value) {
             for (var i = 0; i < array.length; i++) {
                 if (array[i][key] == value) {
