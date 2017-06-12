@@ -114,10 +114,24 @@ app.use(function(err, req, res, next){
 
 //------------------------ User section ------------------------
 //login func, search by Login name
-app.get('/api/users/:login/', function (req, res) {
+app.post('/api/users', function (req, res) {
     //find a record in DB with @login credentials
     //json with username and password must be sent
-    res.send({mess: 'login is correct', user: req.params.login, pass: req.params.pass});
+    db.collection('Users').findOne({'login': req.body.username, 'password': req.body.password}, function (err, items) {
+        if (err){
+            res.statusCode = 500;
+            log.error('Internal error(%d)" %s', res.statusCode, err.message);
+            return res.send({error: 'Server error'});
+        } else{
+            if (items == null) {
+                res.statusCode = 200;
+                res.send({message: 'This user doesnt exist', userdata: 'undefined'});
+            }else{
+                res.statusCode = 200;
+                res.send({message: 'Successfull login', userdata: items});
+            }
+        }
+    });
 });
 
 
@@ -179,6 +193,7 @@ app.post('/api/users/:user_id/files', function (req, res) {
 app.put('/api/users/:user_id/files/:file_id', function (req, res) {
     //res.send('file was successfully updated');
     var ObjectID = require('mongodb').ObjectID;
+    console.log(req.body);
     db.collection('Files', function (err, collection) {
         collection.updateOne({'_id':  new ObjectID(req.params.file_id), 'user': req.params.user_id}, {$set:{'title': req.body.filename, 'folder':req.body.foldername}}, function (err, result) {
             collection.findOne({'_id': new ObjectID(req.params.file_id), 'user': req.params.user_id, 'title': req.body.filename}, function (err, result) {
@@ -187,7 +202,7 @@ app.put('/api/users/:user_id/files/:file_id', function (req, res) {
                     res.send('Internal error');
                 } else {
                     res.statusCode = 200;
-                    res.send('File was successfully updated');
+                    res.send({message: 'File was successfully updated', fileinfo: result});
                 }
             });
         })
@@ -210,7 +225,6 @@ app.delete('/api/users/:user_id/files/:file_id', function (req, res) {
             });
         });
     });
-    //res.send('file was successfully deleted');
 });
 
 //get certain file
